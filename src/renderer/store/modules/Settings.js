@@ -1,8 +1,7 @@
 import os from 'os'
-import path from 'path'
 
 const state = {
-  downloadDir: path.join(os.tmpdir(), 'podcasts')
+  downloadDir: os.tmpdir()
 }
 
 const mutations = {

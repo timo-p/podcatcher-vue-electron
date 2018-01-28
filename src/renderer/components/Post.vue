@@ -4,11 +4,13 @@
     <font-awesome-icon v-if="!post.isRead" icon="exclamation" />
     <a href="#" v-bind:title="markAsReadTitle" v-on:click="toggleAsRead">{{markAsReadTitle}}</a>
     <a title="Download" v-on:click="queue"><font-awesome-icon icon="download"/></a>
+    <a v-bind:title="file" v-if="fileExists"><font-awesome-icon icon="hdd"/></a>
     <div v-if="showDescription">{{post.description}}</div>
   </li>
 </template>
 
 <script>
+  import fs from 'fs'
   import { mapMutations, mapState } from 'vuex'
 
   export default {
@@ -22,6 +24,12 @@
     },
     props: ['post', 'feed'],
     computed: {
+      file: function () {
+        return `${this.downloadDir}/${this.feed.title}/${this.post.filename}`
+      },
+      fileExists: function () {
+        return fs.existsSync(this.file)
+      },
       markAsReadTitle: function () {
         return this.post.isRead ? 'Mark as unread' : 'Mark as read'
       },
