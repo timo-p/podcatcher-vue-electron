@@ -2,10 +2,10 @@
   <div>
     <h1>Settings</h1>
     <label>Download directory</label>
-    <input disabled type="text" v-bind:value="downloadDir"/>
-    <input type="file" v-on:change="updateDownloadDir" webkitdirectory />
+    <b-form-input disabled v-bind:value="downloadDir" type="text"/>
+    <b-form-file v-on:change="updateDownloadDir" directory placeholder="Download dir"></b-form-file>
     <br/>
-    <button v-on:click="save">Save</button>
+    <b-button variant="success" v-on:click="save">Save</b-button>
     <router-link to="/">Cancel</router-link>
   </div>
 </template>
@@ -23,6 +23,7 @@
       },
       save: function () {
         this.saveSettings({downloadDir: this.newDownloadDir})
+        this.$router.push('/')
       },
       ...mapMutations(['saveSettings'])
     },

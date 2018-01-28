@@ -3,6 +3,7 @@ import axios from 'axios'
 import fontawesome from '@fortawesome/fontawesome'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import fafree from '@fortawesome/fontawesome-free-solid'
+import BootstrapVue from 'bootstrap-vue'
 
 import App from './App'
 import router from './router'
@@ -14,6 +15,8 @@ Vue.config.productionTip = false
 
 fontawesome.library.add(fafree)
 Vue.component(FontAwesomeIcon.name, FontAwesomeIcon)
+
+Vue.use(BootstrapVue)
 
 /* eslint-disable no-new */
 new Vue({
