@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a v-on:click="clearFinished" title="Clear finished"><font-awesome-icon icon="eraser"/></a>
+    <a v-if="queue.length > 0" v-on:click="clearFinished" title="Clear finished"><font-awesome-icon icon="eraser"/></a>
     <ul>
       <li v-for="item in queue">
         {{item.title}}</br>

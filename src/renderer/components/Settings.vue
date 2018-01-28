@@ -2,7 +2,7 @@
   <div>
     <h1>Settings</h1>
     <label>Download directory</label>
-    <input type="text" v-bind:value="downloadDir"/>
+    <input disabled type="text" v-bind:value="downloadDir"/>
     <input type="file" v-on:change="updateDownloadDir" webkitdirectory />
     <br/>
     <button v-on:click="save">Save</button>
