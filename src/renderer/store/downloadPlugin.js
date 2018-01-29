@@ -3,7 +3,7 @@ const downloaderPlugin = store => {
     if (state.Queue.queue.length > 0 && !state.Queue.queue.find((q) => q.downloadState === 'DOWNLOADING')) {
       const item = state.Queue.queue.find(q => q.downloadState === 'QUEUED')
       if (item) {
-        store.commit('downloadItem', item)
+        store.dispatch('downloadItem', item)
       }
     }
   })

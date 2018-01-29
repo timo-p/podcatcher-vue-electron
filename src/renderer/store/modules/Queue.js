@@ -1,35 +1,36 @@
 import { download } from '../../services/download'
 
 const state = {
-  queue: []
+  queue: [],
+  cancels: []
 }
-
-const getItem = (state, item) => state.queue.find((q) => q.feedId === item.feedId && q.postId === item.postId)
 
 const mutations = {
   queueItem (state, item) {
     state.queue.push(item)
   },
-  downloadItem (state, item) {
-    const toDownload = getItem(state, item)
-    const cancel = new Promise((resolve) => {
-      toDownload.cancel = resolve
-    })
-    download(toDownload, cancel)
-  },
   updateStatus (state, status) {
-    let item = getItem(state, status)
+    let item = state.queue.find(q => q.postId === status.postId)
     Object.assign(item, status)
   },
   clearFinished (state) {
     state.queue = state.queue.filter((q) => ['FINISHED', 'CANCELED'].indexOf(q.downloadState) === -1)
+  },
+  cancelDownload (state, item) {
+    state.cancels.push(item.postId)
+  },
+  removeCancel (state, postId) {
+    state.cancels = state.cancels.filter(c => c !== postId)
   }
 }
 
 const actions = {
-  cancelDownload: function ({state}, cancelItem) {
-    let item = getItem(state, cancelItem)
-    item.cancel(true)
+  cancelDownload: function ({commit}, item) {
+    commit('cancelDownload', item)
+  },
+  downloadItem ({state}, item) {
+    const toDownload = state.queue.find(q => q.postId === item.postId)
+    download(toDownload)
   }
 }
 

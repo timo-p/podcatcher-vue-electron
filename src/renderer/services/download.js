@@ -2,8 +2,19 @@ import request from 'request'
 import fs from 'fs'
 import store from '../store'
 
-export const download = (item, cancel) => {
+export const download = (item) => {
   console.log('Starting download', item)
+  let canceled = false
+
+  const cancel = store.subscribe((mutation, state) => {
+    if (state.Queue.cancels.indexOf(item.postId) !== -1 && !canceled) {
+      canceled = true
+      store.commit('removeCancel', item.postId)
+      req.abort()
+      updateStatus({downloadState: 'CANCELED', downloadProgress: 0, speed: 0, downloaded: 0})
+      fs.unlinkSync(tmpFilename)
+    }
+  })
 
   if (!fs.existsSync(item.tempDir)) {
     console.log('Creating directory', item.tempDir)
@@ -27,6 +38,7 @@ export const download = (item, cancel) => {
 
   const file = fs.createWriteStream(tmpFilename)
   file.on('close', () => {
+    cancel()
     if (fs.existsSync(tmpFilename)) {
       if (!fs.existsSync(item.dir)) {
         console.log('Creating directory', item.dir)
@@ -61,12 +73,4 @@ export const download = (item, cancel) => {
     })
   })
   req.pipe(file)
-
-  cancel.then(done => {
-    if (done) {
-      req.abort()
-      updateStatus({downloadState: 'CANCELED', downloadProgress: 0, speed: 0, downloaded: 0})
-      fs.unlinkSync(tmpFilename)
-    }
-  })
 }
