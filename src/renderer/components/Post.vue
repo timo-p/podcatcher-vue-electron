@@ -1,6 +1,7 @@
 <template>
   <li>
     <span v-on:click="showDescription=!showDescription">{{post.title}}</span>
+    <span>{{date}}</span>
     <font-awesome-icon v-if="!post.isRead" icon="exclamation" />
     <a href="#" v-bind:title="markAsReadTitle" v-on:click="toggleAsRead">{{markAsReadTitle}}</a>
     <a title="Download" v-on:click="queue"><font-awesome-icon icon="download"/></a>
@@ -11,6 +12,7 @@
 
 <script>
   import fs from 'fs'
+  import { DateTime } from 'luxon'
   import { mapMutations, mapState } from 'vuex'
 
   export default {
@@ -24,6 +26,9 @@
     },
     props: ['post', 'feed'],
     computed: {
+      date: function () {
+        return DateTime.fromRFC2822(this.post.pubDate).toFormat('yyyy-LL-dd')
+      },
       file: function () {
         return `${this.downloadDir}/${this.feed.title}/${this.post.filename}`
       },
