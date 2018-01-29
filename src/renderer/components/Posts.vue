@@ -1,6 +1,7 @@
 <template>
   <div>
     <a href="#" v-on:click="markAllPostsAsRead">Mark all as read</a>
+    <a href="#" v-on:click="refreshFeed(feedId)">Refresh feed</a>
     <ul>
       <post :key="post.id" v-bind:post="post" v-bind:feed="feed" v-for="post in feed.posts"/>
       </post>
@@ -9,7 +10,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapMutations } from 'vuex'
+  import { mapGetters, mapMutations, mapActions } from 'vuex'
   import Post from './Post'
 
   export default {
@@ -19,7 +20,8 @@
       markAllPostsAsRead: function () {
         this.markAllAsRead({feedId: this.feedId})
       },
-      ...mapMutations(['markAllAsRead'])
+      ...mapMutations(['markAllAsRead']),
+      ...mapActions(['refreshFeed'])
     },
     computed: {
       feedId () {
