@@ -1,6 +1,9 @@
 <template>
   <div>
-    <textarea v-model="feeds"></textarea><button v-on:click="add">Add</button>
+    <h1>Add a batch of feeds</h1>
+    <textarea v-model="feeds"></textarea>
+    <br/>
+    <button v-on:click="add" class="btn btn-primary btn-sm">Add</button>
   </div>
 </template>
 

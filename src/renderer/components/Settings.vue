@@ -7,6 +7,8 @@
     <br/>
     <b-button variant="success" v-on:click="save">Save</b-button>
     <router-link to="/">Cancel</router-link>
+    <br/><br/>
+    <b-button variant="danger" v-on:click="reset">Reset all data</b-button>
   </div>
 </template>
 
@@ -24,6 +26,10 @@
       save: function () {
         this.saveSettings({downloadDir: this.newDownloadDir})
         this.$router.push('/')
+      },
+      reset: function () {
+        window.localStorage.removeItem('vuex')
+        window.location.reload()
       },
       ...mapMutations(['saveSettings'])
     },

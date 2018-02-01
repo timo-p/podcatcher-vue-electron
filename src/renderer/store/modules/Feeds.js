@@ -10,7 +10,9 @@ const getters = {
 
 const mutations = {
   addFeed (state, feed) {
-    state.feeds.push(feed)
+    const feeds = [].concat(state.feeds).concat(feed)
+    feeds.sort((a, b) => a.title === b.title ? 0 : a.title < b.title ? -1 : 1)
+    state.feeds = feeds
   },
   togglePostAsRead (state, { feedId, postId }) {
     const post = state.feeds

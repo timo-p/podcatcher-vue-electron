@@ -1,7 +1,7 @@
 <template>
   <div>
-    <a href="#" v-on:click="markAllPostsAsRead">Mark all as read</a>
-    <a href="#" v-on:click="refreshFeed(feedId)">Refresh feed</a>
+    <a title="Mark all as read" v-on:click="markAllPostsAsRead"><font-awesome-icon icon="check"/></a>
+    <a title="Refresh" v-on:click="refreshFeed(feedId)"><font-awesome-icon icon="sync"/></a>
     <ul>
       <post :key="post.id" v-bind:post="post" v-bind:feed="feed" v-for="post in feed.posts"/>
       </post>
@@ -38,8 +38,4 @@
 </script>
 
 <style scoped>
-  div {
-    flex-grow: 2;
-    flex-basis: 60%;
-  }
 </style>

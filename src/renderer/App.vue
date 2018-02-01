@@ -1,11 +1,11 @@
 <template>
-  <div id="app">
+  <div id="app" class="container">
     <router-link to="/settings">Settings</router-link>
     <router-link to="/addbatch">Add batch</router-link>
     <add-feed></add-feed>
-    <main>
+    <main class="row">
       <feeds></feeds>
-      <router-view></router-view>
+      <router-view class="col-6"></router-view>
       <queue></queue>
     </main>
   </div>
@@ -25,9 +25,6 @@
 </script>
 
 <style>
-  main {
-    display: flex;
-  }
   main > div {
     border: 1px solid;
     padding: 10px;

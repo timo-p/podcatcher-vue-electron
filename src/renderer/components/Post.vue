@@ -1,12 +1,18 @@
 <template>
   <li>
-    <span v-on:click="showDescription=!showDescription">{{post.title}}</span>
-    <span>{{date}}</span>
-    <font-awesome-icon v-if="!post.isRead" icon="exclamation" />
-    <a href="#" v-bind:title="markAsReadTitle" v-on:click="toggleAsRead">{{markAsReadTitle}}</a>
-    <a title="Download" v-on:click="queue"><font-awesome-icon icon="download"/></a>
-    <a v-bind:title="file" v-if="fileExists"><font-awesome-icon icon="hdd"/></a>
+    <div class="row">
+      <div class="col-sm-10">
+        <span v-on:click="showDescription=!showDescription">{{post.title}}</span>
+        <span>{{date}}</span>
+        <a v-bind:title="file" v-if="fileExists"><font-awesome-icon icon="hdd"/></a>
+      </div>
+      <div class="col-sm-2">
+        <font-awesome-icon v-if="!post.isRead" icon="exclamation" v-on:click="toggleAsRead" />
+        <a title="Download" class="download" v-on:click="queue"><font-awesome-icon icon="download"/></a>
+      </div>
+    </div>
     <div v-if="showDescription">{{post.description}}</div>
+    <hr/>
   </li>
 </template>
 
@@ -69,3 +75,12 @@
     }
   }
 </script>
+
+<style scoped>
+  .download {
+    display: none;
+  }
+  li:hover .download {
+    display: inline;
+  }
+</style>

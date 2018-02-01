@@ -1,13 +1,15 @@
 <template>
-  <div>
+  <div class="col-sm">
     <a v-if="queue.length > 0" v-on:click="clearFinished" title="Clear finished"><font-awesome-icon icon="eraser"/></a>
     <ul>
       <li v-for="item in queue">
         {{item.title}}</br>
         {{item.downloadState}}</br>
-        {{item.downloadProgress}} %</br>
+        <div class="progress">
+          <div v-bind:style="{width: item.downloadProgress + '%'}" class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{item.downloadProgress}}%</div>
+        </div>
         {{item.speed}} kt/s</br>
-        {{item.downloaded}} %</br>
+        {{size(item)}} mb</br>
         <a href="#" title="Cancel" v-on:click="cancel(item)" v-if="item.downloadState === 'DOWNLOADING'">Cancel</a>
       </li>
     </ul>
@@ -23,19 +25,21 @@
       cancel: function (item) {
         this.cancelDownload(item)
       },
+      size: function (item) {
+        return Math.round(item.downloaded / 1048576 * 100) / 100
+      },
       ...mapActions(['cancelDownload']),
       ...mapMutations(['clearFinished'])
     },
-    computed: mapState({
-      queue: (state) => {
-        return state.Queue.queue
-      }
-    })
+    computed: {
+      ...mapState({
+        queue: (state) => {
+          return state.Queue.queue
+        }
+      })
+    }
   }
 </script>
 
 <style scoped>
-  div {
-    flex-basis: 20%;
-  }
 </style>

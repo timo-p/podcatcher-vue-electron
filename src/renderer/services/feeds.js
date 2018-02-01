@@ -55,7 +55,13 @@ const parseFeed = xml => {
 }
 
 export const fetchFeed = url => {
-  return rp(url)
+  const options = {
+    url,
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.121 Safari/537.36 Vivaldi/1.95.1077.41'
+    }
+  }
+  return rp(options)
     .then(parseFeed)
     .then(feed => Object.assign({}, feed, { url }))
 }

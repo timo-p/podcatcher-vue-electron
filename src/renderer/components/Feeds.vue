@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="col-sm">
     <h1>Feeds</h1>
-    <a href="#" v-on:click="refreshAll" v-if="feeds.length > 0">Refresh all</a>
+    <a v-on:click="refreshAll" v-if="feeds.length > 0"><font-awesome-icon icon="sync"/></a>
     <ul>
       <li v-for="feed in feeds">
         <router-link :to="{ name: 'posts', params: { feedId: feed.id }}">{{feed.title}}</router-link>
@@ -29,7 +29,4 @@
 </script>
 
 <style scoped>
-  div {
-    flex-basis: 20%;
-  }
 </style>

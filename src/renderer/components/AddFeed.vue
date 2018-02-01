@@ -1,6 +1,7 @@
 <template>
   <div>
-    <input type="text" v-model="feed"/><button v-on:click="add">Add</button>
+    <input type="text" v-model="feed"/>
+    <button v-on:click="add" class="btn btn-primary btn-sm">Add</button>
   </div>
 </template>
 
