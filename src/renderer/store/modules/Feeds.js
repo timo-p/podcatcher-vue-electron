@@ -46,6 +46,11 @@ const actions = {
     fetchFeed(feed.url).then(updatedFeed => {
       commit('updatePosts', updatedFeed)
     })
+  },
+  refreshAll ({ state, dispatch }) {
+    state.feeds.forEach((feed) => {
+      dispatch('refreshFeed', feed.id)
+    })
   }
 }
 

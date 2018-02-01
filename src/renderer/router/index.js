@@ -29,6 +29,11 @@ export default new Router({
       }
     },
     {
+      path: '/addbatch',
+      name: 'addbatch',
+      component: require('@/components/AddBatch').default
+    },
+    {
       path: '*',
       redirect: '/'
     }

@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <router-link to="/settings">Settings</router-link>
+    <router-link to="/addbatch">Add batch</router-link>
     <add-feed></add-feed>
     <main>
       <feeds></feeds>
