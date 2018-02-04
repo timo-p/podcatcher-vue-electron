@@ -21,10 +21,16 @@
 </script>
 
 <style>
+  #app {
+    height: 100vh;
+    overflow: hidden;
+  }
   main > div {
     border: 1px solid;
     padding: 10px;
     margin: 10px;
+    overflow: scroll;
+    height: 95vh;
   }
   a {
     cursor: pointer;
