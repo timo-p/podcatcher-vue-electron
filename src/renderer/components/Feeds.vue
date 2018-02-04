@@ -13,16 +13,18 @@
 </template>
 
 <script>
-  import { mapState, mapActions, mapMutations } from 'vuex'
+  import { mapState, mapMutations } from 'vuex'
   import AppMenu from './AppMenu'
 
   export default {
     name: 'feeds',
     components: { AppMenu },
     methods: {
+      refreshAll: function () {
+        this.queueFeedRefreshForAllFeeds(this.feeds.map(f => f.id))
+      },
       hasUnread: (feed) => feed.posts.some(p => !p.isRead),
-      ...mapActions(['refreshAll']),
-      ...mapMutations(['markAllFeedsAsRead'])
+      ...mapMutations(['markAllFeedsAsRead', 'queueFeedRefreshForAllFeeds'])
     },
     computed: mapState({
       feeds: (state) => {

@@ -57,7 +57,7 @@ const actions = {
   },
   refreshFeed ({ state, commit }, feedId) {
     const feed = state.feeds.find(f => f.id === feedId)
-    fetchFeed(feed.url).then(updatedFeed => {
+    return fetchFeed(feed.url).then(updatedFeed => {
       commit('updatePosts', updatedFeed)
     })
   },

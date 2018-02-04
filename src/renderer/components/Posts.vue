@@ -1,7 +1,7 @@
 <template>
   <div>
     <a title="Mark all as read" v-on:click="markAllPostsAsRead"><font-awesome-icon icon="check"/></a>
-    <a title="Refresh" v-on:click="refreshFeed(feedId)"><font-awesome-icon icon="sync"/></a>
+    <a title="Refresh" v-on:click="queueFeedRefresh(feedId)"><font-awesome-icon icon="sync"/></a>
     <a title="Delete feed" v-b-modal.delete-feed><font-awesome-icon icon="trash"/></a>
 
     <b-modal @ok="deleteThisFeed" id="delete-feed" title="Delete feed" ok-variant="danger" ok-title="Delete">
@@ -29,8 +29,8 @@
       markAllPostsAsRead: function () {
         this.markAllAsRead({feedId: this.feedId})
       },
-      ...mapMutations(['markAllAsRead', 'deleteFeed']),
-      ...mapActions(['refreshFeed'])
+      ...mapMutations(['markAllAsRead', 'deleteFeed', 'queueFeedRefresh']),
+      ...mapActions(['startNewRefresh'])
     },
     computed: {
       feedId () {
