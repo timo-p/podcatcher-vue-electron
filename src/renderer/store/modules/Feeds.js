@@ -16,6 +16,9 @@ const mutations = {
       state.feeds = feeds
     }
   },
+  deleteFeed (state, feedId) {
+    state.feeds = state.feeds.filter(f => f.id !== feedId)
+  },
   togglePostAsRead (state, { feedId, postId }) {
     const post = state.feeds
       .find(f => f.id === feedId)

@@ -8,7 +8,10 @@
     <b-button variant="success" v-on:click="save">Save</b-button>
     <router-link to="/">Cancel</router-link>
     <br/><br/>
-    <b-button variant="danger" v-on:click="reset">Reset all data</b-button>
+    <b-button variant="danger" v-b-modal.reset>Reset all data</b-button>
+    <b-modal @ok="reset" id="reset" title="Reset all data" ok-variant="danger" ok-title="Reset">
+      Are you sure you want to reset all settings and feeds?
+    </b-modal>
   </div>
 </template>
 
