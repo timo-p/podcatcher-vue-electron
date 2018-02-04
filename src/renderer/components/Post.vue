@@ -38,7 +38,16 @@
         return DateTime.fromRFC2822(this.post.pubDate).toFormat('yyyy-LL-dd')
       },
       file: function () {
-        return `${this.downloadDir}/${this.feed.title}/${this.post.filename}`
+        return path.join(this.downloadDir, sanitize(this.feed.title), this.filename)
+      },
+      filename: function () {
+        const title = sanitize(this.post.title)
+        if (title) {
+          const extension = path.extname(this.post.filename) || '.mp3'
+          return `${title}${extension}`
+        } else {
+          return this.post.filename
+        }
       },
       fileExists: function () {
         return fs.existsSync(this.file)
