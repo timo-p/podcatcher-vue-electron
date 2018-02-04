@@ -27,3 +27,10 @@
     }
   }
 </script>
+
+<style scoped>
+  textarea {
+    min-height: 200px;
+    width: 100%;
+  }
+</style>

@@ -29,6 +29,11 @@ export default new Router({
       }
     },
     {
+      path: '/addfeed',
+      name: 'addfeed',
+      component: require('@/components/AddFeed').default
+    },
+    {
       path: '/addbatch',
       name: 'addbatch',
       component: require('@/components/AddBatch').default

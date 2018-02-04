@@ -11,7 +11,7 @@
         <a title="Download" class="download" v-on:click="queue"><font-awesome-icon icon="download"/></a>
       </div>
     </div>
-    <div v-if="showDescription">{{post.description}}</div>
+    <div v-if="showDescription" v-html="post.description"></div>
     <hr/>
   </li>
 </template>

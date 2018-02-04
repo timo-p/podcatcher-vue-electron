@@ -1,8 +1,5 @@
 <template>
-  <div id="app" class="container">
-    <router-link to="/settings">Settings</router-link>
-    <router-link to="/addbatch">Add batch</router-link>
-    <add-feed></add-feed>
+  <div id="app" class="container-fluid">
     <main class="row">
       <feeds></feeds>
       <router-view class="col-6"></router-view>
@@ -13,14 +10,13 @@
 
 <script>
   import Feeds from './components/Feeds'
-  import AddFeed from './components/AddFeed'
   import Queue from './components/Queue'
   import '../../node_modules/bootstrap/dist/css/bootstrap.css'
   import '../../node_modules/bootstrap-vue/dist/bootstrap-vue.css'
 
   export default {
     name: 'podcatcher-vue-electron',
-    components: { Feeds, AddFeed, Queue }
+    components: { Feeds, Queue }
   }
 </script>
 

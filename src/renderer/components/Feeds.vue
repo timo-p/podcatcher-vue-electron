@@ -1,5 +1,6 @@
 <template>
   <div class="col-sm">
+    <AppMenu/>
     <h1>Feeds</h1>
     <a v-on:click="refreshAll" v-if="feeds.length > 0"><font-awesome-icon icon="sync"/></a>
     <ul>
@@ -13,9 +14,11 @@
 
 <script>
   import { mapState, mapActions } from 'vuex'
+  import AppMenu from './AppMenu'
 
   export default {
     name: 'feeds',
+    components: { AppMenu },
     methods: {
       hasUnread: (feed) => feed.posts.some(p => !p.isRead),
       ...mapActions(['refreshAll'])
