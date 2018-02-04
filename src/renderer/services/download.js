@@ -1,5 +1,6 @@
 import request from 'request'
 import fs from 'fs'
+import path from 'path'
 import store from '../store'
 
 export const download = (item) => {
@@ -32,8 +33,8 @@ export const download = (item) => {
 
   updateStatus({downloadState: 'DOWNLOADING', downloadProgress: 0, speed: 0, downloaded: 0})
 
-  const tmpFilename = `${item.tempDir}${item.file}.incomplete`
-  const filename = `${item.dir}${item.file}`
+  const tmpFilename = path.join(item.tempDir, `${item.file}.incomplete`)
+  const filename = path.join(item.dir, item.file)
   let lastRefreshed
 
   const file = fs.createWriteStream(tmpFilename)

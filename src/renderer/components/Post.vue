@@ -18,6 +18,7 @@
 
 <script>
   import fs from 'fs'
+  import path from 'path'
   import { DateTime } from 'luxon'
   import { mapMutations, mapState } from 'vuex'
   import sanitize from 'sanitize-filename'
@@ -56,15 +57,21 @@
         this.togglePostAsRead({feedId: this.feed.id, postId: this.post.id})
       },
       queue: function () {
+        const title = sanitize(this.post.title)
+        let file = this.post.filename
+        if (title) {
+          const extension = path.extname(this.post.filename) || '.mp3'
+          file = `${title}${extension}`
+        }
         const item = {
           feedId: this.feed.id,
           postId: this.post.id,
           url: this.post.url,
           title: this.post.title,
           size: this.post.size,
-          dir: `${this.downloadDir}/${sanitize(this.feed.title)}/`,
-          tempDir: `${this.downloadDir}/incomplete_downloads/`,
-          file: this.post.filename,
+          dir: path.join(this.downloadDir, sanitize(this.feed.title)),
+          tempDir: path.join(this.downloadDir, 'incomplete_downloads'),
+          file,
           downloadState: 'QUEUED',
           downloadProgress: 0,
           added: new Date(),
