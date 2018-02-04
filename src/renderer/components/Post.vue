@@ -20,6 +20,7 @@
   import fs from 'fs'
   import { DateTime } from 'luxon'
   import { mapMutations, mapState } from 'vuex'
+  import sanitize from 'sanitize-filename'
 
   export default {
     name: 'post',
@@ -61,7 +62,7 @@
           url: this.post.url,
           title: this.post.title,
           size: this.post.size,
-          dir: `${this.downloadDir}/${this.feed.title}/`,
+          dir: `${this.downloadDir}/${sanitize(this.feed.title)}/`,
           tempDir: `${this.downloadDir}/incomplete_downloads/`,
           file: this.post.filename,
           downloadState: 'QUEUED',
