@@ -21,7 +21,7 @@
     components: { AppMenu },
     methods: {
       refreshAll: function () {
-        this.queueFeedRefreshForAllFeeds(this.feeds.map(f => f.id))
+        this.queueFeedRefreshForAllFeeds(this.feeds)
       },
       hasUnread: (feed) => feed.posts.some(p => !p.isRead),
       ...mapMutations(['markAllFeedsAsRead', 'queueFeedRefreshForAllFeeds'])

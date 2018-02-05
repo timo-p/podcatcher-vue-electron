@@ -1,34 +1,38 @@
 const state = {
-  stagingQueue: [],
-  currentlyRefreshing: []
+  queue: []
 }
 
+const getQueueItem = (feed) => ({
+  title: feed.title,
+  feedId: feed.id,
+  state: 'QUEUED'
+})
+
 const mutations = {
-  queueFeedRefresh (state, feedId) {
-    if (state.stagingQueue.indexOf(feedId) === -1) {
-      state.stagingQueue.push(feedId)
+  queueFeedRefresh (state, feed) {
+    if (!state.queue.some(q => q.feedId === feed.id)) {
+      state.queue.push(getQueueItem(feed))
     }
   },
-  queueFeedRefreshForAllFeeds (state, feedIds) {
-    feedIds
-      .filter(feedId => state.stagingQueue.indexOf(feedId) === -1)
-      .filter(feedId => state.currentlyRefreshing.indexOf(feedId) === -1)
-      .forEach(feedId => state.stagingQueue.push(feedId))
+  queueFeedRefreshForAllFeeds (state, feeds) {
+    const queueIds = state.queue.map(q => q.feedId)
+    feeds
+      .filter(feed => queueIds.indexOf(feed.id) === -1)
+      .forEach(feed => state.queue.push(getQueueItem(feed)))
   },
-  addToCurrentlyRefreshingList (state, feedId) {
-    state.currentlyRefreshing.push(feedId)
-    state.stagingQueue = state.stagingQueue.filter(i => i !== feedId)
+  markAsRefreshing (state, item) {
+    state.queue.find(q => q.feedId === item.feedId).state = 'REFRESHING'
   },
-  removeFromCurrentlyRefreshingList (state, feedId) {
-    state.currentlyRefreshing = state.currentlyRefreshing.filter(i => i !== feedId)
+  removeFromQueue (state, item) {
+    state.queue = state.queue.filter(q => q.feedId !== item.feedId)
   }
 }
 
 const actions = {
-  startNewRefresh: ({commit, dispatch}, feedId) => {
-    dispatch('refreshFeed', feedId)
+  startNewRefresh: ({commit, dispatch}, item) => {
+    dispatch('refreshFeed', item.feedId)
       .then(() => {
-        commit('removeFromCurrentlyRefreshingList', feedId)
+        commit('removeFromQueue', item)
       })
   }
 }
