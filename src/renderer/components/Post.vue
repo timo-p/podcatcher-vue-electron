@@ -11,7 +11,10 @@
         <a title="Download" class="download" v-on:click="queue"><font-awesome-icon icon="download"/></a>
       </div>
     </div>
-    <div v-if="showDescription" v-html="post.description"></div>
+    <div v-if="showDescription">
+      <font-awesome-icon v-if="post.isRead" icon="exclamation" v-on:click="toggleAsRead" />
+      <div v-html="post.description"></div>
+    </div>
     <hr/>
   </li>
 </template>

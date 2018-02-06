@@ -32,11 +32,13 @@ const mutations = {
     })
   },
   markAllFeedsAsRead (state) {
-    state.feeds.forEach(f => {
-      f.posts.forEach(p => {
-        p.isRead = true
-      })
-    })
+    state.feeds.forEach(f =>
+      f.posts
+        .filter(p => p.isRead === false)
+        .forEach(p => {
+          p.isRead = true
+        })
+    )
   },
   updatePosts (state, newFeed) {
     const feed = state.feeds.find(f => f.id === newFeed.id)
