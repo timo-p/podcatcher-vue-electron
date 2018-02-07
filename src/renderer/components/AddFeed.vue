@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+  import { mapMutations } from 'vuex'
   import { fetchFeed } from '../services/feeds'
 
   export default {
@@ -20,7 +20,7 @@
         fetchFeed(this.feed)
           .then(this.addFeed)
       },
-      ...mapActions(['addFeed'])
+      ...mapMutations(['addFeed'])
     }
   }
 </script>

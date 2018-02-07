@@ -17,7 +17,7 @@ const mutations = {
   queueFeedRefreshForAllFeeds (state, feeds) {
     const queueIds = state.queue.map(q => q.feedId)
     feeds
-      .filter(feed => queueIds.indexOf(feed.id) === -1)
+      .filter(feed => !queueIds.includes(feed.id))
       .forEach(feed => state.queue.push(getQueueItem(feed)))
   },
   markAsRefreshing (state, item) {

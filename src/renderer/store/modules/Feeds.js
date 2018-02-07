@@ -1,53 +1,59 @@
 import { fetchFeed, sortPosts } from '../../services/feeds'
 
 const state = {
-  feeds: []
+  feeds: {},
+  feedIds: [],
+  posts: {}
 }
 
 const getters = {
-  feedById: state => feedId => state.feeds.find(feed => feed.id === feedId)
+  sortedFeeds: state => state.feedIds.map(id => state.feeds[id]),
+  feedPosts: state => feedId => state.feeds[feedId].posts.map(id => state.posts[id]),
+  feedById: state => feedId => state.feeds[feedId]
 }
 
 const mutations = {
-  addFeed (state, feed) {
-    if (!state.feeds.some(f => f.id === feed.id)) {
-      const feeds = [].concat(state.feeds).concat(feed)
-      feeds.sort((a, b) => a.title === b.title ? 0 : a.title < b.title ? -1 : 1)
-      state.feeds = feeds
+  addFeed (state, {feed, posts}) {
+    if (!state.feedIds.includes(feed.id)) {
+      feed.posts = posts.map(p => p.id)
+      state.feeds = {...state.feeds, [feed.id]: feed}
+      const postsMapped = posts.reduce((o, p) => ({...o, [p.id]: p}), {})
+      state.posts = {...state.posts, ...postsMapped}
+      const feedIds = Object.values(state.feeds)
+        .sort((a, b) => a.title === b.title ? 0 : a.title < b.title ? -1 : 1)
+        .map(f => f.id)
+      state.feedIds = feedIds
     }
   },
   deleteFeed (state, feedId) {
-    state.feeds = state.feeds.filter(f => f.id !== feedId)
+    state.feedIds = state.feedIds.filter(id => id !== feedId)
+    state.feeds[feedId].posts
+      .forEach((id) => delete state.posts[id])
+    delete state.feeds[feedId]
   },
-  togglePostAsRead (state, { feedId, postId }) {
-    const post = state.feeds
-      .find(f => f.id === feedId)
-      .posts.find(p => p.id === postId)
-    post.isRead = !post.isRead
+  togglePostAsRead (state, postId) {
+    state.posts[postId].isRead = !state.posts[postId].isRead
   },
-  markAllAsRead (state, { feedId }) {
-    const posts = state.feeds.find(f => f.id === feedId).posts
-    posts.forEach(p => {
-      p.isRead = true
-    })
+  markAllAsRead (state, feedId) {
+    this.getters.feedPosts(feedId)
+      .filter(p => !p.isRead)
+      .forEach(p => { p.isRead = true })
   },
   markAllFeedsAsRead (state) {
-    state.feeds.forEach(f =>
-      f.posts
-        .filter(p => p.isRead === false)
-        .forEach(p => {
-          p.isRead = true
-        })
-    )
+    Object.keys(state.posts)
+      .filter(id => !state.posts[id].isRead)
+      .forEach(id => { state.posts[id].isRead = true })
   },
-  updatePosts (state, newFeed) {
-    const feed = state.feeds.find(f => f.id === newFeed.id)
-    const postIds = feed.posts.map(p => p.id)
-    const newPosts = newFeed.posts.filter(p => postIds.indexOf(p.id) === -1)
+  updatePosts (state, {feedId, posts}) {
+    const currentPostIds = state.feeds[feedId].posts
+    const newPosts = posts.filter(p => !currentPostIds.includes(p.id))
     if (newPosts.length > 0) {
-      let posts = [].concat(feed.posts).concat(newPosts)
-      sortPosts(posts)
-      feed.posts = posts
+      const postsMapped = newPosts.reduce((o, p) => ({...o, [p.id]: p}), {})
+      state.posts = {...state.posts, ...postsMapped}
+      const postIds = state.feeds[feedId].posts.concat(newPosts.map(p => p.id))
+      let feedPosts = postIds.map(id => state.posts[id])
+      sortPosts(feedPosts)
+      state.feeds[feedId].posts = feedPosts.map(p => p.id)
     }
   }
 }
@@ -58,9 +64,9 @@ const actions = {
     commit('addFeed', feed)
   },
   refreshFeed ({ state, commit }, feedId) {
-    const feed = state.feeds.find(f => f.id === feedId)
-    return fetchFeed(feed.url).then(updatedFeed => {
-      commit('updatePosts', updatedFeed)
+    const feed = state.feeds[feedId]
+    return fetchFeed(feed.url).then(({posts}) => {
+      commit('updatePosts', {feedId, posts})
     })
   },
   refreshAll ({ state, dispatch }) {

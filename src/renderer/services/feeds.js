@@ -25,10 +25,10 @@ const parseFeed = xml => {
         id: hash(link),
         link,
         url: null,
-        lastChanged: new Date().toString(),
-        posts: []
+        lastChanged: new Date().toString()
       }
 
+      let posts = []
       const items = f.item
       for (let i = 0; i < items.length; i++) {
         if (items[i].enclosure) {
@@ -46,11 +46,12 @@ const parseFeed = xml => {
             size: items[i].enclosure[0].$.length,
             isRead: false
           }
-          feed.posts.push(post)
+          posts.push(post)
         }
       }
-      sortPosts(feed.posts)
-      resolve(feed)
+      sortPosts(posts)
+      // posts = posts.slice(0, 1)
+      resolve({feed, posts})
     })
   })
 }
@@ -64,7 +65,7 @@ export const fetchFeed = url => {
   }
   return rp(options)
     .then(parseFeed)
-    .then(feed => Object.assign({}, feed, { url }))
+    .then(({feed, posts}) => ({feed: {...feed, url}, posts}))
 }
 
 export const sortPosts = posts => {

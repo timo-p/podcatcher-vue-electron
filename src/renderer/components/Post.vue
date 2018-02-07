@@ -7,12 +7,12 @@
         <a v-bind:title="file" v-if="fileExists"><font-awesome-icon icon="hdd"/></a>
       </div>
       <div class="col-sm-2">
-        <font-awesome-icon v-if="!post.isRead" icon="exclamation" v-on:click="toggleAsRead" />
+        <font-awesome-icon v-if="!post.isRead" icon="exclamation" v-on:click="togglePostAsRead(post.id)" />
         <a title="Download" class="download" v-on:click="queue"><font-awesome-icon icon="download"/></a>
       </div>
     </div>
     <div v-if="showDescription">
-      <font-awesome-icon v-if="post.isRead" icon="exclamation" v-on:click="toggleAsRead" />
+      <font-awesome-icon v-if="post.isRead" icon="exclamation" v-on:click="togglePostAsRead(post.id)" />
       <div v-html="post.description"></div>
     </div>
     <hr/>
@@ -65,9 +65,6 @@
       })
     },
     methods: {
-      toggleAsRead: function () {
-        this.togglePostAsRead({feedId: this.feed.id, postId: this.post.id})
-      },
       queue: function () {
         const title = sanitize(this.post.title)
         let file = this.post.filename
