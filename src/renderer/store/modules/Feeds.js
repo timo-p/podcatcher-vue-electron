@@ -66,10 +66,6 @@ const mutations = {
 }
 
 const actions = {
-  addFeed ({ commit }, feed) {
-    // do something async
-    commit('addFeed', feed)
-  },
   refreshFeed ({ state, commit }, feedId) {
     const feed = state.feeds[feedId]
     return fetchFeed(feed.url).then(({posts}) => {
@@ -88,6 +84,17 @@ const actions = {
     let ids = [].concat(state.feedIds)
     while (ids.length > 0) {
       await dispatch('markAllAsRead', ids.pop())
+    }
+  },
+  addFeed ({ commit }, url) {
+    return fetchFeed(url)
+      .then((feed) => {
+        commit('addFeed', feed)
+      })
+  },
+  addBatch: async ({ state, dispatch }, urls) => {
+    while (urls.length > 0) {
+      await dispatch('addFeed', urls.pop())
     }
   }
 }

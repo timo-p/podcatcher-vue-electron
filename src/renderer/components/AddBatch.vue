@@ -9,7 +9,6 @@
 
 <script>
   import { mapActions } from 'vuex'
-  import { fetchFeed } from '../services/feeds'
 
   export default {
     name: 'addBatch',
@@ -18,12 +17,10 @@
     }),
     methods: {
       add () {
-        this.feeds.split('\n').forEach((feed) => {
-          fetchFeed(feed)
-            .then(this.addFeed)
-        })
+        const urls = this.feeds.split('\n').filter(u => u)
+        this.addBatch(urls)
       },
-      ...mapActions(['addFeed'])
+      ...mapActions(['addBatch'])
     }
   }
 </script>

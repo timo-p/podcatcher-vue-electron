@@ -37,7 +37,7 @@ const parseFeed = xml => {
           const filename = path.basename(parsedUrl.pathname)
           const guid = items[i].guid[0]._ || items[i].guid[0]
           const post = {
-            id: hash(feed.id + guid),
+            id: hash(feed.id + guid + postUrl + items[i].pubDate[0]),
             title: items[i].title[0],
             pubDate: items[i].pubDate[0],
             description: items[i].description[0],
