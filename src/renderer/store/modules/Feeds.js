@@ -1,14 +1,17 @@
+import Vue from 'vue'
+
 import { fetchFeed, sortPosts } from '../../services/feeds'
 
 const state = {
   feeds: {},
-  feedIds: [],
-  posts: {}
+  feedIds: []
 }
+
+const feedPostsKey = (feedId) => `posts_${feedId}`
 
 const getters = {
   sortedFeeds: state => state.feedIds.map(id => state.feeds[id]),
-  feedPosts: state => feedId => state.feeds[feedId].posts.map(id => state.posts[id]),
+  feedPosts: state => feedId => state.feeds[feedId].posts.map(id => state[feedPostsKey(feedId)][id]),
   feedById: state => feedId => state.feeds[feedId]
 }
 
@@ -16,44 +19,48 @@ const mutations = {
   addFeed (state, {feed, posts}) {
     if (!state.feedIds.includes(feed.id)) {
       feed.posts = posts.map(p => p.id)
-      state.feeds = {...state.feeds, [feed.id]: feed}
+      Vue.set(state.feeds, feed.id, feed)
       const postsMapped = posts.reduce((o, p) => ({...o, [p.id]: p}), {})
-      state.posts = {...state.posts, ...postsMapped}
+      Vue.set(state, feedPostsKey(feed.id), postsMapped)
       const feedIds = Object.values(state.feeds)
         .sort((a, b) => a.title === b.title ? 0 : a.title < b.title ? -1 : 1)
         .map(f => f.id)
-      state.feedIds = feedIds
+      Vue.set(state, 'feedIds', feedIds)
     }
   },
   deleteFeed (state, feedId) {
-    state.feedIds = state.feedIds.filter(id => id !== feedId)
-    state.feeds[feedId].posts
-      .forEach((id) => delete state.posts[id])
+    Vue.set(state, 'feedIds', state.feedIds.filter(id => id !== feedId))
+    delete state[feedPostsKey(feedId)]
     delete state.feeds[feedId]
   },
-  togglePostAsRead (state, postId) {
-    state.posts[postId].isRead = !state.posts[postId].isRead
+  togglePostAsRead (state, {feedId, postId}) {
+    const post = state[feedPostsKey(feedId)][postId]
+    post.isRead = !post.isRead
   },
   markAllAsRead (state, feedId) {
-    this.getters.feedPosts(feedId)
+    Object.values(state[feedPostsKey(feedId)])
       .filter(p => !p.isRead)
       .forEach(p => { p.isRead = true })
   },
   markAllFeedsAsRead (state) {
-    Object.keys(state.posts)
-      .filter(id => !state.posts[id].isRead)
-      .forEach(id => { state.posts[id].isRead = true })
+    state.feedIds
+      .map(id => Object.values(state[feedPostsKey(id)]))
+      .forEach(posts =>
+        posts
+          .filter(p => !p.isRead)
+          .forEach(p => { p.isRead = true })
+      )
   },
   updatePosts (state, {feedId, posts}) {
-    const currentPostIds = state.feeds[feedId].posts
+    const currentPostIds = Object.values(state[feedPostsKey(feedId)]).map(p => p.id)
     const newPosts = posts.filter(p => !currentPostIds.includes(p.id))
     if (newPosts.length > 0) {
       const postsMapped = newPosts.reduce((o, p) => ({...o, [p.id]: p}), {})
-      state.posts = {...state.posts, ...postsMapped}
+      Vue.set(state, feedPostsKey(feedId), {...state[feedPostsKey(feedId)], ...postsMapped})
       const postIds = state.feeds[feedId].posts.concat(newPosts.map(p => p.id))
-      let feedPosts = postIds.map(id => state.posts[id])
+      let feedPosts = postIds.map(id => state[feedPostsKey(feedId)][id])
       sortPosts(feedPosts)
-      state.feeds[feedId].posts = feedPosts.map(p => p.id)
+      Vue.set(state.feeds[feedId], 'posts', feedPosts.map(p => p.id))
     }
   }
 }
@@ -73,6 +80,15 @@ const actions = {
     state.feeds.forEach((feed) => {
       dispatch('refreshFeed', feed.id)
     })
+  },
+  markAllAsRead ({ commit }, feedId) {
+    commit('markAllAsRead', feedId)
+  },
+  markAllFeedsAsRead: async ({ state, dispatch }) => {
+    let ids = [].concat(state.feedIds)
+    while (ids.length > 0) {
+      await dispatch('markAllAsRead', ids.pop())
+    }
   }
 }
 

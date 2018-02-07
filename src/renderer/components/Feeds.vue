@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import { mapState, mapMutations, mapGetters } from 'vuex'
+  import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
   import AppMenu from './AppMenu'
   import RefreshQueueCount from './RefreshQueueCount'
 
@@ -29,7 +29,8 @@
         return this.feedPosts(feed.id).some(p => !p.isRead)
       },
       hasUnreadFeeds: () => this.posts.some(p => !p.isRead),
-      ...mapMutations(['markAllFeedsAsRead', 'queueFeedRefreshForAllFeeds'])
+      ...mapMutations(['queueFeedRefreshForAllFeeds']),
+      ...mapActions(['markAllFeedsAsRead'])
     },
     computed: {
       ...mapState({
