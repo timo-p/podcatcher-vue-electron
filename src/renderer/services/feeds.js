@@ -3,6 +3,8 @@ import rp from 'request-promise-native'
 import url from 'url'
 import path from 'path'
 import xml2js from 'xml2js'
+import { DateTime } from 'luxon'
+import store from '../store'
 
 const hash = str =>
   crypto
@@ -49,11 +51,17 @@ const parseFeed = xml => {
           posts.push(post)
         }
       }
+      posts = filterOldPosts(posts)
       sortPosts(posts)
-      // posts = posts.slice(0, 1)
+      // posts = posts.slice(0, 3)
       resolve({feed, posts})
     })
   })
+}
+
+export const filterOldPosts = (posts) => {
+  const min = store.getters.getIgnoreOlderThanDateTime
+  return posts.filter(p => DateTime.fromRFC2822(p.pubDate) > min)
 }
 
 export const fetchFeed = url => {

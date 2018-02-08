@@ -21,6 +21,8 @@ Vue.use(BootstrapVue)
 
 Vue.use(infiniteScroll)
 
+store.dispatch('cleanOldPosts')
+
 /* eslint-disable no-new */
 new Vue({
   components: { App },

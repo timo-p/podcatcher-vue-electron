@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { DateTime } from 'luxon'
 
 import { fetchFeed, sortPosts } from '../../services/feeds'
 
@@ -62,6 +63,14 @@ const mutations = {
       sortPosts(feedPosts)
       Vue.set(state.feeds[feedId], 'posts', feedPosts.map(p => p.id))
     }
+  },
+  removePosts (state, {feedId, postIds}) {
+    const newPostsIds = state.feeds[feedId].posts.filter(p => !postIds.includes(p))
+    Vue.set(state.feeds[feedId], 'posts', newPostsIds)
+    const key = feedPostsKey(feedId)
+    postIds.forEach(postId => {
+      delete state[key][postId]
+    })
   }
 }
 
@@ -96,6 +105,22 @@ const actions = {
     while (urls.length > 0) {
       await dispatch('addFeed', urls.pop())
     }
+  },
+  cleanOldPosts ({ state, commit, getters }) {
+    const min = getters.getIgnoreOlderThanDateTime
+    state.feedIds.forEach(feedId => {
+      let postIds = []
+      const posts = state[feedPostsKey(feedId)]
+      Object.keys(posts).forEach(postId => {
+        const post = posts[postId]
+        if (DateTime.fromRFC2822(post.pubDate) < min) {
+          postIds.push(postId)
+        }
+      })
+      if (postIds.length > 0) {
+        commit('removePosts', {feedId, postIds})
+      }
+    })
   }
 }
 
