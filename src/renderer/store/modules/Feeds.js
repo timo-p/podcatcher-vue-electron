@@ -71,6 +71,10 @@ const mutations = {
     postIds.forEach(postId => {
       delete state[key][postId]
     })
+  },
+  updatePostDownloaded (state, {feedId, postId}) {
+    const key = feedPostsKey(feedId)
+    Vue.set(state[key][postId], 'downloaded', new Date().toString())
   }
 }
 

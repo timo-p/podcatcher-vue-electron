@@ -47,6 +47,7 @@ export const download = (item) => {
       }
       fs.renameSync(tmpFilename, filename)
       updateStatus({downloadState: 'FINISHED', downloadProgress: 100, speed: 0})
+      store.commit('updatePostDownloaded', {feedId: item.feedId, postId: item.postId})
     }
   })
 
