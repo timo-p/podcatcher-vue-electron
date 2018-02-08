@@ -1,6 +1,6 @@
 import os from 'os'
 import Vue from 'Vue'
-import { DateTime } from 'luxon'
+import { startOfDay, subYears, subMonths, subWeeks, subDays } from 'date-fns'
 
 const state = {
   downloadDir: os.tmpdir(),
@@ -18,10 +18,19 @@ const mutations = {
 }
 
 const getters = {
-  getIgnoreOlderThanDateTime: state =>
-    DateTime.local()
-      .startOf('day')
-      .minus({[state.ignoreOlderThanUnit]: state.ignoreOlderThan})
+  getIgnoreOlderThanDateTime: state => {
+    const start = startOfDay(new Date())
+    switch (state.ignoreOlderThanUnit) {
+      case 'years':
+        return subYears(start, state.ignoreOlderThan)
+      case 'months':
+        return subMonths(start, state.ignoreOlderThan)
+      case 'weeks':
+        return subWeeks(start, state.ignoreOlderThan)
+      case 'days':
+        return subDays(start, state.ignoreOlderThan)
+    }
+  }
 }
 
 export default {

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { DateTime } from 'luxon'
+import { format, isBefore } from 'date-fns'
 
 import { fetchFeed, sortPosts } from '../../services/feeds'
 
@@ -113,7 +113,7 @@ const actions = {
       const posts = state[feedPostsKey(feedId)]
       Object.keys(posts).forEach(postId => {
         const post = posts[postId]
-        if (DateTime.fromRFC2822(post.pubDate) < min) {
+        if (isBefore(format(post.pubDate), min)) {
           postIds.push(postId)
         }
       })

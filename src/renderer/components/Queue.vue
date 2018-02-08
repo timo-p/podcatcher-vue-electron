@@ -8,9 +8,10 @@
         <div class="progress">
           <div v-bind:style="{width: item.downloadProgress + '%'}" class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{item.downloadProgress}}%</div>
         </div>
-        {{item.speed}} kt/s</br>
-        {{size(item)}} mb</br>
+        {{size(item)}} mb
+        {{item.speed}} kt/s<br/>
         <a href="#" title="Cancel" v-on:click="cancel(item)" v-if="item.downloadState === 'DOWNLOADING'">Cancel</a>
+        <hr/>
       </li>
     </ul>
   </div>
@@ -42,4 +43,7 @@
 </script>
 
 <style scoped>
+  ul {
+    font-size: 80%;
+  }
 </style>

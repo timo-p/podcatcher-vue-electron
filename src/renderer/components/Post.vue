@@ -3,16 +3,23 @@
     <div class="row">
       <div class="col-sm-10">
         <span v-on:click="showDescription=!showDescription">{{post.title}}</span>
-        <span>{{date}}</span>
-        <a v-bind:title="file" v-if="fileExists"><font-awesome-icon icon="hdd"/></a>
+        <br/>
+        <span class="date">{{date}}</span>
       </div>
-      <div class="col-sm-2">
-        <a v-if="!post.isRead" title="Mark as read"><font-awesome-icon icon="exclamation" v-on:click="toggleIsRead" /></a>
-        <a title="Download" class="download" v-on:click="queue"><font-awesome-icon icon="download"/></a>
+      <div class="col-sm-2 actions">
+        <div>
+          <a v-bind:title="file" v-if="fileExists"><font-awesome-icon icon="hdd"/></a>
+        </div>
+        <div>
+          <a v-if="!post.isRead" title="Mark as read"><font-awesome-icon icon="exclamation" v-on:click="toggleIsRead" /></a>
+          <a v-if="post.isRead" class="mark-as-unread" title="Mark as unread"><font-awesome-icon icon="exclamation" v-on:click="toggleIsRead" /></a>
+        </div>
+        <div>
+          <a title="Download" class="download" v-on:click="queue"><font-awesome-icon icon="download"/></a>
+        </div>
       </div>
     </div>
     <div v-if="showDescription">
-      <a v-if="post.isRead" title="Mark as unread"><font-awesome-icon icon="exclamation" v-on:click="toggleIsRead" /></a>
       <div v-html="post.description"></div>
     </div>
     <hr/>
@@ -22,7 +29,7 @@
 <script>
   import fs from 'fs'
   import path from 'path'
-  import { DateTime } from 'luxon'
+  import { parse, distanceInWordsToNow } from 'date-fns'
   import { mapMutations, mapState } from 'vuex'
   import sanitize from 'sanitize-filename'
 
@@ -38,7 +45,7 @@
     props: ['post', 'feed'],
     computed: {
       date: function () {
-        return DateTime.fromRFC2822(this.post.pubDate).toFormat('yyyy-LL-dd')
+        return distanceInWordsToNow(parse(this.post.pubDate))
       },
       file: function () {
         return path.join(this.downloadDir, sanitize(this.feed.title), this.filename)
@@ -97,10 +104,22 @@
 </script>
 
 <style scoped>
-  .download {
+  .date {
+    font-style: italic;
+    font-size: 80%;
+  }
+  .actions {
+    text-align: center;
+  }
+  .actions div {
+    min-height: 24px;
+  }
+  .download,
+  .mark-as-unread {
     display: none;
   }
-  li:hover .download {
+  li:hover .download,
+  li:hover .mark-as-unread {
     display: inline;
   }
 </style>
