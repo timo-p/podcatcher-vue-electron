@@ -24,6 +24,7 @@
   #app {
     height: 100vh;
     overflow: hidden;
+    font-weight: lighter;
   }
   main > div {
     border: 1px solid;
