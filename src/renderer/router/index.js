@@ -9,7 +9,7 @@ export default new Router({
     {
       path: '/',
       name: 'main',
-      component: require('@/components/Blank').default
+      component: require('@/components/UnreadPosts').default
     },
     {
       path: '/settings',
@@ -39,13 +39,8 @@ export default new Router({
       component: require('@/components/AddBatch').default
     },
     {
-      path: '/unreadPosts',
-      name: 'unreadPosts',
-      component: require('@/components/UnreadPosts').default
-    },
-    {
       path: '*',
-      redirect: '/unreadPosts'
+      redirect: '/'
     }
   ]
 })

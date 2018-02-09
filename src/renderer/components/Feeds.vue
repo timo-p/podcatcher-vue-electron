@@ -2,7 +2,7 @@
   <div class="col-sm">
     <AppMenu/>
     <a v-on:click="refreshAll" v-if="sortedFeeds.length > 0"><font-awesome-icon icon="sync"/></a>
-    <RefreshQueueCount/>
+    <RefreshQueueCount />
     <a title="Mark all as read" v-if="sortedFeeds.length > 0 && hasUnreadFeeds" v-on:click="markAllFeedsAsRead"><font-awesome-icon icon="check"/></a>
     <ul>
       <li v-for="feed in sortedFeeds">

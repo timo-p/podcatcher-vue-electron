@@ -23,10 +23,10 @@
   export default {
     name: 'blank',
     methods: {
-      cancel: function (item) {
+      cancel (item) {
         this.cancelDownload(item)
       },
-      size: function (item) {
+      size (item) {
         return Math.round(item.downloaded / 1048576 * 100) / 100
       },
       ...mapActions(['cancelDownload']),

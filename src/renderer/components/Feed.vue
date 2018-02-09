@@ -4,11 +4,14 @@
     <a title="Refresh" v-on:click="queueFeedRefresh(feed)"><font-awesome-icon icon="sync"/></a>
     <a title="Delete feed" v-b-modal.delete-feed><font-awesome-icon icon="trash"/></a>
     <PostList :posts="posts" :feed="feed" :loadMore="loadMore"></PostList>
+    <b-modal @ok="deleteThisFeed" id="delete-feed" title="Delete feed" ok-variant="danger" ok-title="Delete">
+      Are you sure you want to delete this feed?
+    </b-modal>
   </div>
 </template>
 
 <script>
-  import { mapGetters, mapMutations, mapActions } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   import PostList from './PostList'
 
   export default {
@@ -28,8 +31,7 @@
         this.deleteFeed(this.feedId)
         this.$router.push('/')
       },
-      ...mapMutations(['markAllAsRead', 'deleteFeed', 'queueFeedRefresh']),
-      ...mapActions(['startNewRefresh'])
+      ...mapMutations(['markAllAsRead', 'deleteFeed', 'queueFeedRefresh'])
     },
     computed: {
       postCount () {
@@ -58,6 +60,3 @@
     }
   }
 </script>
-
-<style scoped>
-</style>

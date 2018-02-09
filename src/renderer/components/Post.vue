@@ -62,9 +62,6 @@
       fileExists: function () {
         return fs.existsSync(this.file)
       },
-      markAsReadTitle: function () {
-        return this.post.isRead ? 'Mark as unread' : 'Mark as read'
-      },
       getFeed: function () {
         return this.feed || this.feedById(this.post.feedId)
       },

@@ -13,13 +13,13 @@
   export default {
     name: 'unread-posts',
     components: { PostList },
-    data: function () {
+    data () {
       return {
         showPosts: 10
       }
     },
     methods: {
-      loadMore: function () {
+      loadMore () {
         this.showPosts += 10
       },
       ...mapActions(['markAllFeedsAsRead'])
