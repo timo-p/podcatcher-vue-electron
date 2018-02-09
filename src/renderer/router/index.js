@@ -18,8 +18,8 @@ export default new Router({
     },
     {
       path: '/feeds/:feedId',
-      name: 'posts',
-      component: require('@/components/Posts').default,
+      name: 'feed',
+      component: require('@/components/Feed').default,
       beforeEnter: (to, from, next) => {
         if (!store.getters.feedById(to.params.feedId)) {
           next('/')
@@ -39,8 +39,13 @@ export default new Router({
       component: require('@/components/AddBatch').default
     },
     {
+      path: '/unreadPosts',
+      name: 'unreadPosts',
+      component: require('@/components/UnreadPosts').default
+    },
+    {
       path: '*',
-      redirect: '/'
+      redirect: '/unreadPosts'
     }
   ]
 })

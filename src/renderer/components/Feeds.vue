@@ -6,7 +6,7 @@
     <a title="Mark all as read" v-if="sortedFeeds.length > 0 && hasUnreadFeeds" v-on:click="markAllFeedsAsRead"><font-awesome-icon icon="check"/></a>
     <ul>
       <li v-for="feed in sortedFeeds">
-        <router-link :to="{ name: 'posts', params: { feedId: feed.id }}">{{feed.title}}</router-link>
+        <router-link :to="{ name: 'feed', params: { feedId: feed.id }}">{{feed.title}}</router-link>
         <font-awesome-icon v-if="hasUnread(feed)" icon="exclamation" />
       </li>
     </ul>

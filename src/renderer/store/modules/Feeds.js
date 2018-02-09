@@ -13,7 +13,16 @@ const feedPostsKey = (feedId) => `posts_${feedId}`
 const getters = {
   sortedFeeds: state => state.feedIds.map(id => state.feeds[id]),
   feedPosts: state => feedId => state.feeds[feedId].posts.map(id => state[feedPostsKey(feedId)][id]),
-  feedById: state => feedId => state.feeds[feedId]
+  feedById: state => feedId => state.feeds[feedId],
+  unreadPosts: state => {
+    let posts = state.feedIds.reduce((c, feedId) => {
+      const unread = Object.values(state[feedPostsKey(feedId)])
+        .filter(p => !p.isRead)
+      return c.concat(unread)
+    }, [])
+    sortPosts(posts)
+    return posts
+  }
 }
 
 const mutations = {

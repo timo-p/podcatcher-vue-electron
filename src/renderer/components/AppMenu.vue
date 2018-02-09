@@ -5,6 +5,7 @@
     </template>
     <b-dropdown-item to="/addfeed">Add feed</b-dropdown-item>
     <b-dropdown-item to="/addbatch">Add a batch of feeds</b-dropdown-item>
+    <b-dropdown-item to="/unreadPosts">Unread</b-dropdown-item>
     <b-dropdown-divider></b-dropdown-divider>
     <b-dropdown-item to="/settings">Settings</b-dropdown-item>
   </b-dropdown>

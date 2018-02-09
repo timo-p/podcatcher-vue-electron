@@ -4,7 +4,7 @@
       <div class="col-sm-10">
         <span v-on:click="showDescription=!showDescription">{{post.title}}</span>
         <br/>
-        <span class="date">{{date}}</span>
+        <span class="date">{{date}} ago</span>
       </div>
       <div class="col-sm-2 actions">
         <div>
@@ -30,7 +30,7 @@
   import fs from 'fs'
   import path from 'path'
   import { parse, distanceInWordsToNow } from 'date-fns'
-  import { mapMutations, mapState } from 'vuex'
+  import { mapMutations, mapState, mapGetters } from 'vuex'
   import sanitize from 'sanitize-filename'
 
   export default {
@@ -48,7 +48,7 @@
         return distanceInWordsToNow(parse(this.post.pubDate))
       },
       file: function () {
-        return path.join(this.downloadDir, sanitize(this.feed.title), this.filename)
+        return path.join(this.downloadDir, sanitize(this.getFeed.title), this.filename)
       },
       filename: function () {
         const title = sanitize(this.post.title)
@@ -65,6 +65,12 @@
       markAsReadTitle: function () {
         return this.post.isRead ? 'Mark as unread' : 'Mark as read'
       },
+      getFeed: function () {
+        return this.feed || this.feedById(this.post.feedId)
+      },
+      ...mapGetters([
+        'feedById'
+      ]),
       ...mapState({
         downloadDir: (state) => {
           return state.Settings.downloadDir
@@ -73,7 +79,7 @@
     },
     methods: {
       toggleIsRead () {
-        this.togglePostAsRead({feedId: this.feed.id, postId: this.post.id})
+        this.togglePostAsRead({feedId: this.getFeed.id, postId: this.post.id})
       },
       queue: function () {
         const title = sanitize(this.post.title)
@@ -83,12 +89,12 @@
           file = `${title}${extension}`
         }
         const item = {
-          feedId: this.feed.id,
+          feedId: this.getFeed.id,
           postId: this.post.id,
           url: this.post.url,
           title: this.post.title,
           size: this.post.size,
-          dir: path.join(this.downloadDir, sanitize(this.feed.title)),
+          dir: path.join(this.downloadDir, sanitize(this.getFeed.title)),
           tempDir: path.join(this.downloadDir, 'incomplete_downloads'),
           file,
           downloadState: 'QUEUED',
