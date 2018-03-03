@@ -19,7 +19,7 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "podcatcher-vue-electron",
+    "productName": "Podcatcher",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"

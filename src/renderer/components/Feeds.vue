@@ -6,7 +6,7 @@
     <a title="Mark all as read" v-if="sortedFeeds.length > 0 && hasUnreadFeeds" v-on:click="markAllFeedsAsRead"><font-awesome-icon icon="check"/></a>
     <ul>
       <li v-for="feed in sortedFeeds">
-        <router-link v-bind:class="{ unread: hasUnread(feed) }" :to="{ name: 'feed', params: { feedId: feed.id }}">{{feed.title}}</router-link>
+        <router-link v-bind:class="{ unread: hasUnread(feed) }" :to="{ name: 'feed', params: { feedId: feed.id }}">{{feed.title}}{{unreadPosts(feed)}}</router-link>
       </li>
     </ul>
   </div>
@@ -23,6 +23,10 @@
     methods: {
       refreshAll () {
         this.queueFeedRefreshForAllFeeds(this.sortedFeeds)
+      },
+      unreadPosts (feed) {
+        const unread = this.feedPosts(feed.id).filter(p => !p.isRead).length
+        return unread > 0 ? ` (${unread})` : ''
       },
       hasUnread (feed) {
         return this.feedPosts(feed.id).some(p => !p.isRead)
