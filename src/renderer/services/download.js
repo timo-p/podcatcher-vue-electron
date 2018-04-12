@@ -75,5 +75,9 @@ export const download = (item) => {
       }
     })
   })
+  req.on('error', (e) => {
+    log.error('Request error', e)
+    store.commit('cancelDownload', item)
+  })
   req.pipe(file)
 }
