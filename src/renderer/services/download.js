@@ -1,10 +1,11 @@
 import request from 'request'
 import fs from 'fs'
 import path from 'path'
+import log from 'electron-log'
 import store from '../store'
 
 export const download = (item) => {
-  console.log('Starting download', item)
+  log.info('Starting download', item)
   let canceled = false
 
   const cancel = store.subscribe((mutation, state) => {
@@ -18,7 +19,7 @@ export const download = (item) => {
   })
 
   if (!fs.existsSync(item.tempDir)) {
-    console.log('Creating directory', item.tempDir)
+    log.debug('Creating directory', item.tempDir)
     fs.mkdirSync(item.tempDir)
   }
 
@@ -42,7 +43,7 @@ export const download = (item) => {
     cancel()
     if (fs.existsSync(tmpFilename)) {
       if (!fs.existsSync(item.dir)) {
-        console.log('Creating directory', item.dir)
+        log.debug('Creating directory', item.dir)
         fs.mkdirSync(item.dir)
       }
       fs.renameSync(tmpFilename, filename)

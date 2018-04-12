@@ -4,6 +4,7 @@ import url from 'url'
 import path from 'path'
 import xml2js from 'xml2js'
 import { format, isAfter } from 'date-fns'
+import log from 'electron-log'
 import store from '../store'
 
 const hash = str =>
@@ -19,43 +20,49 @@ const parseFeed = xml => {
       if (err) {
         return reject(err)
       }
-      const f = result.rss.channel[0]
-      const link = f.link[0]
-      let feed = {
-        title: f.title[0],
-        description: f.description[0],
-        id: hash(link),
-        link,
-        url: null,
-        lastChanged: new Date().toString()
-      }
 
-      let posts = []
-      const items = f.item
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].enclosure) {
-          const postUrl = items[i].enclosure[0].$.url
-          const parsedUrl = url.parse(postUrl)
-          const filename = path.basename(parsedUrl.pathname)
-          const guid = items[i].guid[0]._ || items[i].guid[0]
-          const post = {
-            id: hash(feed.id + guid + postUrl + items[i].pubDate[0]),
-            feedId: feed.id,
-            title: items[i].title[0],
-            pubDate: items[i].pubDate[0],
-            description: items[i].description[0],
-            url: postUrl,
-            filename,
-            size: items[i].enclosure[0].$.length,
-            isRead: false
-          }
-          posts.push(post)
+      try {
+        const f = result.rss.channel[0]
+        const link = f.link[0]
+        let feed = {
+          title: f.title[0],
+          description: f.description[0],
+          id: hash(link),
+          link,
+          url: null,
+          lastChanged: new Date().toString()
         }
+
+        let posts = []
+        const items = f.item
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].enclosure) {
+            const postUrl = items[i].enclosure[0].$.url
+            const parsedUrl = url.parse(postUrl)
+            const filename = path.basename(parsedUrl.pathname)
+            const guid = items[i].guid[0]._ || items[i].guid[0]
+            const post = {
+              id: hash(feed.id + guid + postUrl + items[i].pubDate[0]),
+              feedId: feed.id,
+              title: items[i].title[0],
+              pubDate: items[i].pubDate[0],
+              description: items[i].description ? items[i].description[0] : '',
+              url: postUrl,
+              filename,
+              size: items[i].enclosure[0].$.length,
+              isRead: false
+            }
+            posts.push(post)
+          }
+        }
+        posts = filterOldPosts(posts)
+        sortPosts(posts)
+        resolve({feed, posts})
+      } catch (e) {
+        log.error('Parsing feed xml failed', e)
+        log.error('Xml:', xml)
+        reject(e)
       }
-      posts = filterOldPosts(posts)
-      sortPosts(posts)
-      // posts = posts.slice(0, 3)
-      resolve({feed, posts})
     })
   })
 }
@@ -66,6 +73,7 @@ export const filterOldPosts = (posts) => {
 }
 
 export const fetchFeed = url => {
+  log.debug(`Loading feed url ${url}`)
   const options = {
     url,
     headers: {

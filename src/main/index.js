@@ -1,6 +1,10 @@
 'use strict'
 
 import { app, BrowserWindow } from 'electron'
+import log from 'electron-log'
+
+log.transports.file.level = 'debug'
+log.transports.console.level = 'debug'
 
 /**
  * Set `__static` path to static files in production

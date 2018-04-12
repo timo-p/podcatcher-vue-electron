@@ -59,6 +59,8 @@
     "axios": "^0.16.1",
     "bootstrap-vue": "^2.0.0-rc.1",
     "date-fns": "^1.29.0",
+    "electron-log": "^2.2.14",
+    "electron-unhandled": "^1.1.0",
     "request-promise-native": "^1.0.5",
     "sanitize-filename": "^1.6.1",
     "vue": "^2.3.3",

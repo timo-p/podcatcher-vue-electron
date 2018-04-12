@@ -5,10 +5,17 @@ import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import fafree from '@fortawesome/fontawesome-free-solid'
 import BootstrapVue from 'bootstrap-vue'
 import infiniteScroll from 'vue-infinite-scroll'
+import unhandled from 'electron-unhandled'
+import log from 'electron-log'
 
 import App from './App'
 import router from './router'
 import store from './store'
+
+unhandled({
+  logger: log.info,
+  showDialog: false
+})
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
