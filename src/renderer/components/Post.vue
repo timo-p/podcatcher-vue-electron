@@ -2,7 +2,7 @@
   <li>
     <div class="row">
       <div class="col-sm-10">
-        <span v-on:click="showDescription=!showDescription">{{post.title}}</span>
+        <span v-on:click="showDescription=!showDescription">{{this.getFeed.title}} - {{post.title}}</span>
         <br/>
         <span class="date">{{date}} ago</span>
       </div>
