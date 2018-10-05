@@ -34,7 +34,7 @@ const parseFeed = xml => {
         }
 
         let posts = []
-        const items = f.item
+        const items = f.item || []
         for (let i = 0; i < items.length; i++) {
           if (items[i].enclosure) {
             const postUrl = items[i].enclosure[0].$.url

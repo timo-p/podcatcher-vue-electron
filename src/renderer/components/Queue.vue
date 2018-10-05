@@ -1,6 +1,7 @@
 <template>
   <div class="col-sm">
     <a v-if="queue.length > 0" v-on:click="clearFinished" title="Clear finished"><font-awesome-icon icon="eraser"/></a>
+    <a v-if="queue.length > 0" v-on:click="clearQueues" title="Clear queues"><font-awesome-icon icon="ban"/></a>
     <ul>
       <li v-for="item in queue">
         {{item.title}}</br>
@@ -30,7 +31,7 @@
         return Math.round(item.downloaded / 1048576 * 100) / 100
       },
       ...mapActions(['cancelDownload']),
-      ...mapMutations(['clearFinished'])
+      ...mapMutations(['clearFinished', 'clearQueues'])
     },
     computed: {
       ...mapState({

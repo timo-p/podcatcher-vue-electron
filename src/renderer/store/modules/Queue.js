@@ -21,6 +21,10 @@ const mutations = {
   },
   removeCancel (state, postId) {
     state.cancels = state.cancels.filter(c => c !== postId)
+  },
+  clearQueues (state) {
+    state.queue = []
+    state.cancels = []
   }
 }
 

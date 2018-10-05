@@ -1,12 +1,15 @@
 <template>
-  <div>{{size === 0 ? '&nbsp;' : size}}</div>
+  <div v-on:click="clearQueue">{{size === 0 ? '&nbsp;' : size}}</div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapMutations } from 'vuex'
 
   export default {
     name: 'refreshQueueCount',
+    methods: {
+      ...mapMutations(['clearQueue'])
+    },
     computed: {
       ...mapState({
         size: (state) => {

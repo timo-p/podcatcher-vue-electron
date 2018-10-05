@@ -25,6 +25,9 @@ const mutations = {
   },
   removeFromQueue (state, item) {
     state.queue = state.queue.filter(q => q.feedId !== item.feedId)
+  },
+  clearQueue (state) {
+    state.queue = []
   }
 }
 
