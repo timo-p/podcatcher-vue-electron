@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import axios from 'axios'
-import fontawesome from '@fortawesome/fontawesome'
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import fafree from '@fortawesome/fontawesome-free-solid'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons'
 import BootstrapVue from 'bootstrap-vue'
 import infiniteScroll from 'vue-infinite-scroll'
 import unhandled from 'electron-unhandled'
@@ -21,7 +21,7 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
-fontawesome.library.add(fafree)
+library.add(fas)
 Vue.component(FontAwesomeIcon.name, FontAwesomeIcon)
 
 Vue.use(BootstrapVue)

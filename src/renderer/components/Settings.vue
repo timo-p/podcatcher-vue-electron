@@ -30,6 +30,7 @@
 
 <script>
   import { mapMutations, mapState } from 'vuex'
+  import { electronStore } from '../services/electronStore'
 
   export default {
     name: 'settings',
@@ -54,7 +55,7 @@
         this.$router.push('/')
       },
       reset: function () {
-        window.localStorage.removeItem('vuex')
+        electronStore.clear()
         window.location.reload()
       },
       ...mapMutations(['saveSettings'])
