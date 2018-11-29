@@ -6,6 +6,7 @@ import xml2js from 'xml2js'
 import { format, isAfter } from 'date-fns'
 import log from 'electron-log'
 import store from '../store'
+import R from 'ramda'
 
 const hash = str =>
   crypto
@@ -23,7 +24,13 @@ const parseFeed = xml => {
 
       try {
         const f = result.rss.channel[0]
-        const link = f.link[0]
+        const atomLinks = R.either(
+          R.prop('atom:link'),
+          R.prop('atom10:link')
+        )(f)
+        const atomLink = R.either(R.path(['$', 'href']), R.path(['_']))
+        const link = atomLinks ? atomLink(atomLinks[0]) : f.link[0]
+
         let feed = {
           title: f.title[0],
           description: f.description[0],
