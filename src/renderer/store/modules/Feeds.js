@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { format, isBefore } from 'date-fns'
+import log from 'electron-log'
 
 import { fetchFeed, sortPosts } from '../../services/feeds'
 
@@ -118,7 +119,15 @@ const actions = {
   },
   addBatch: async ({ state, dispatch }, urls) => {
     while (urls.length > 0) {
-      await dispatch('addFeed', urls.pop())
+      const url = urls.shift()
+      try {
+        await dispatch('addFeed', url)
+      } catch (error) {
+        log.error('Failed to load feed', error)
+        Vue.toasted.show(`Failed to load ${url}`, {
+          duration: 10000
+        })
+      }
     }
   },
   cleanOldPosts ({ state, commit, getters }) {

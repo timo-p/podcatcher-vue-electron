@@ -9,6 +9,7 @@
 <script>
   import { mapMutations } from 'vuex'
   import { fetchFeed } from '../services/feeds'
+  import log from 'electron-log'
 
   export default {
     name: 'addFeed',
@@ -19,6 +20,12 @@
       add () {
         fetchFeed(this.feed)
           .then(this.addFeed)
+          .catch((error) => {
+            log.error('Failed to load feed', error)
+            this.$toasted.show(`Failed to load ${this.feed}`, {
+              duration: 10000
+            })
+          })
       },
       ...mapMutations(['addFeed'])
     }

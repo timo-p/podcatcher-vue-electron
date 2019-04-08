@@ -1,3 +1,6 @@
+import Vue from 'vue'
+import log from 'electron-log'
+
 const state = {
   queue: []
 }
@@ -35,6 +38,13 @@ const actions = {
   startNewRefresh: ({commit, dispatch}, item) => {
     dispatch('refreshFeed', item.feedId)
       .then(() => {
+        commit('removeFromQueue', item)
+      })
+      .catch((error) => {
+        log.error('Failed to load feed', error)
+        Vue.toasted.show(`Failed to load ${item.title}`, {
+          duration: 10000
+        })
         commit('removeFromQueue', item)
       })
   }

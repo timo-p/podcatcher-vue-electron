@@ -7,6 +7,7 @@ import BootstrapVue from 'bootstrap-vue'
 import infiniteScroll from 'vue-infinite-scroll'
 import unhandled from 'electron-unhandled'
 import log from 'electron-log'
+import Toasted from 'vue-toasted'
 
 import App from './App'
 import router from './router'
@@ -27,6 +28,8 @@ Vue.component(FontAwesomeIcon.name, FontAwesomeIcon)
 Vue.use(BootstrapVue)
 
 Vue.use(infiniteScroll)
+
+Vue.use(Toasted)
 
 store.dispatch('cleanOldPosts')
 
